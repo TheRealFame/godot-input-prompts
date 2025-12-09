@@ -192,12 +192,12 @@ func get_joypad_motion_textures(icons: int) -> JoypadMotionTextures:
 # Monitor InputEvents and emit icons_changed if:
 # 1) The user has not expressed an icon preference
 # 2) The type of InputEvent is different to last time
-func _input(event: InputEvent):
-	if not (preferred_icons == null or preferred_icons == InputPrompt.Icons. AUTOMATIC):
+func _input(event:  InputEvent):
+	if not (preferred_icons == null or preferred_icons == InputPrompt.Icons.AUTOMATIC):
 		return
 	if event is InputEventKey or event is InputEventMouse:
-		if icons != InputPrompt.Icons.KEYBOARD: 
-			icons = InputPrompt. Icons.KEYBOARD
+		if icons != InputPrompt.Icons.KEYBOARD:
+			icons = InputPrompt.Icons.KEYBOARD
 			emit_signal("icons_changed")
 	if event is InputEventJoypadButton or event is InputEventJoypadMotion:
 		# Do not detect Joypad unless value exceeds deadzone
@@ -205,16 +205,17 @@ func _input(event: InputEvent):
 			return
 
 		var device = event.device
-		var joy_name = Input. get_joy_name(device)
+		var joy_name = Input.get_joy_name(device)
 		
 		# Detect specific controller types
-		if joy_name.find("Xbox") != -1:
+		if joy_name. find("Xbox") != -1:
 			joy_icons = InputPrompt.Icons.XBOX
 		elif joy_name.find("DualShock") != -1 or joy_name.find("PS") != -1:
 			joy_icons = InputPrompt.Icons.SONY
 		elif joy_name.find("Nintendo") != -1:
 			joy_icons = InputPrompt.Icons.NINTENDO
-		elif joy_name.find("Steam Deck") != -1:
+		# Check for any Valve/SteamOS device (Steam Deck, Steam Machine, etc.)
+		elif joy_name.find("Steam") != -1 or joy_name.find("Valve") != -1 or joy_name.find("SteamOS") != -1:
 			joy_icons = InputPrompt.Icons.STEAM_DECK
 		else:
 			# Default to generic for unknown controllers
